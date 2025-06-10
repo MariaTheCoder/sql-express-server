@@ -21,6 +21,10 @@ app.get("/api/v1/employees/:id", (req, res) => {
   res.json(db.prepare("SELECT * FROM Employee WHERE EmployeeId = ?").get(id));
 });
 
+app.post("/api/v1/employees", (req, res) => {
+  res.send("POST request sent");
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
