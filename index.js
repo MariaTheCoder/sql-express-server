@@ -16,6 +16,11 @@ app.get("/api/v1/employees", (req, res) => {
   res.json(db.prepare("SELECT * FROM Employee").all());
 });
 
+app.get("/api/v1/employees/:id", (req, res) => {
+  const id = req.params.id;
+  res.json(db.prepare("SELECT * FROM Employee WHERE EmployeeId = ?").get(id));
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
