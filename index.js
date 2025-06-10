@@ -24,9 +24,19 @@ app.get("/api/v1/employees/:id", (req, res) => {
 });
 
 app.post("/api/v1/employees", (req, res) => {
-  console.log(req.body);
+  const firstName = req.body["FirstName"];
+  const lastName = req.body["LastName"];
 
-  res.send("Request sent successfully");
+  const insertStatement = db.prepare(
+    "INSERT INTO Employee (LastName, FirstName) VALUES (?, ?)"
+  );
+
+  const info = insertStatement.run(lastName, firstName);
+  const newEmployeeId = info.lastInsertRowid;
+
+  res.json(
+    db.prepare("SELECT * FROM Employee WHERE EmployeeId = ?").get(newEmployeeId)
+  );
 });
 
 app.listen(port, () => {
