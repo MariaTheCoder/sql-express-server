@@ -8,6 +8,8 @@ const db = new Database("Chinook_Sqlite.sqlite");
 const app = express();
 const port = 3000;
 
+app.use(express.json());
+
 app.get("/api/v1", (req, res) => {
   res.send("Hello World!");
 });
@@ -22,7 +24,9 @@ app.get("/api/v1/employees/:id", (req, res) => {
 });
 
 app.post("/api/v1/employees", (req, res) => {
-  res.send("POST request sent");
+  console.log(req.body);
+
+  res.send("Request sent successfully");
 });
 
 app.listen(port, () => {

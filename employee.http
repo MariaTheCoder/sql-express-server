@@ -6,4 +6,10 @@ GET http://localhost:3000/api/v1/employees/9
 
 ###
 
-POST http://localhost:3000/api/v1/employees
+POST http://localhost:3000/api/v1/employees HTTP/1.1
+content-type: application/json
+
+{
+  "FirstName": "John",
+  "LastName": "Smith"
+}
