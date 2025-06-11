@@ -2,6 +2,14 @@ GET http://localhost:3000/api/v1/employees
 
 ###
 
+GET http://localhost:3000/api/v1/employees?title=Sales%20Support%20Agent
+
+###
+
+GET http://localhost:3000/api/v1/employees?Title=Sales%20Support%20Agent&City=Calgary&FirstName=Jane
+
+###
+
 GET http://localhost:3000/api/v1/employees/1
 
 ###

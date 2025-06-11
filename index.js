@@ -15,7 +15,60 @@ app.get("/api/v1", (req, res) => {
 });
 
 app.get("/api/v1/employees", (req, res) => {
-  res.json(db.prepare("SELECT * FROM Employee").all());
+  const allowedQueryParams = [
+    "LastName",
+    "FirstName",
+    "Title",
+    "ReportsTo",
+    "Address",
+    "City",
+    "State",
+    "Country",
+  ];
+  const sqlQuery = "SELECT * FROM Employee";
+  const queryParts = [];
+  const placeHolderValues = [];
+  let employees = [];
+
+  for (const qp in req.query) {
+    if (allowedQueryParams.includes(qp)) {
+      queryParts.push(`${qp} = ?`);
+      placeHolderValues.push(req.query[qp]);
+    }
+  }
+
+  if (queryParts.length > 0) {
+    employees = db
+      .prepare(sqlQuery + " WHERE " + queryParts.join(" AND "))
+      .all(placeHolderValues);
+  } else {
+    employees = db.prepare(sqlQuery).all();
+  }
+
+  // if (title) {
+  //   queryParts.push("Title = ?");
+  //   placeHolderValues.push(title);
+  // }
+
+  // if (lastName) {
+  //   queryParts.push("LastName = ?");
+  //   placeHolderValues.push(lastName);
+  // }
+
+  // if (city) {
+  //   queryParts.push("City = ?");
+  //   placeHolderValues.push(city);
+  // }
+
+  // if (title || lastName || city) {
+  //   sqlQuery += " WHERE " + queryParts.join(" AND ");
+  //   console.log(sqlQuery);
+  //   employees = db.prepare(sqlQuery).all(placeHolderValues);
+  // } else {
+  //   employees = db.prepare(sqlQuery).all();
+  // }
+
+  res.json(employees);
 });
 
 app.get("/api/v1/employees/:id", (req, res) => {
