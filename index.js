@@ -20,6 +20,16 @@ app.get("/api/v1/employees", (req, res) => {
 
 app.get("/api/v1/employees/:id", (req, res) => {
   const id = req.params.id;
+
+  const info = db
+    .prepare("SELECT * FROM Employee WHERE EmployeeId = ?")
+    .get(id);
+
+  if (!info) {
+    res.status(404).send("Employee does not exist");
+    return;
+  }
+
   res.json(db.prepare("SELECT * FROM Employee WHERE EmployeeId = ?").get(id));
 });
 
