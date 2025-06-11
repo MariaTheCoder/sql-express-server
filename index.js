@@ -52,6 +52,21 @@ app.put("/api/v1/employees/:id", (req, res) => {
   res.json(db.prepare("SELECT * FROM Employee WHERE EmployeeId = ?").get(id));
 });
 
+app.delete("/api/v1/employees/:id", (req, res) => {
+  const id = req.params.id;
+  const employeeToBeDeleted = db
+    .prepare("SELECT * FROM Employee WHERE EmployeeId = ?")
+    .get(id);
+
+  const deleteStatement = db.prepare(
+    "DELETE FROM Employee WHERE EmployeeId = ?"
+  );
+
+  deleteStatement.run(id);
+
+  res.json(employeeToBeDeleted);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

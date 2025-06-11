@@ -2,7 +2,7 @@ GET http://localhost:3000/api/v1/employees
 
 ###
 
-GET http://localhost:3000/api/v1/employees/10
+GET http://localhost:3000/api/v1/employees/1
 
 ###
 
@@ -16,9 +16,13 @@ content-type: application/json
 
 ###
 
-PUT http://localhost:3000/api/v1/employees/10 HTTP/1.1
+PUT http://localhost:3000/api/v1/employees/9 HTTP/1.1
 content-type: application/json
 
 {
   "FirstName": "Alice"
 }
+
+###
+
+DELETE http://localhost:3000/api/v1/employees/9 HTTP/1.1
