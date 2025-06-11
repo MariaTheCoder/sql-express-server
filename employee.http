@@ -2,7 +2,7 @@ GET http://localhost:3000/api/v1/employees
 
 ###
 
-GET http://localhost:3000/api/v1/employees/9
+GET http://localhost:3000/api/v1/employees/10
 
 ###
 
@@ -12,4 +12,13 @@ content-type: application/json
 {
   "FirstName": "John",
   "LastName": "Smith"
+}
+
+###
+
+PUT http://localhost:3000/api/v1/employees/10 HTTP/1.1
+content-type: application/json
+
+{
+  "FirstName": "Alice"
 }

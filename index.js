@@ -39,6 +39,19 @@ app.post("/api/v1/employees", (req, res) => {
   );
 });
 
+app.put("/api/v1/employees/:id", (req, res) => {
+  const id = req.params.id;
+  const firstName = req.body["FirstName"];
+
+  const updateStatement = db.prepare(
+    "UPDATE Employee SET FirstName = ? WHERE EmployeeId = ?"
+  );
+
+  updateStatement.run(firstName, id);
+
+  res.json(db.prepare("SELECT * FROM Employee WHERE EmployeeId = ?").get(id));
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
