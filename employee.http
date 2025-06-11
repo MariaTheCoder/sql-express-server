@@ -2,6 +2,10 @@ GET http://localhost:3000/api/v1/employees
 
 ###
 
+GET http://localhost:3000/api/v1/employees?ReportsTo=1&Title=IT%20Manager
+
+###
+
 GET http://localhost:3000/api/v1/employees?title=Sales%20Support%20Agent
 
 ###
