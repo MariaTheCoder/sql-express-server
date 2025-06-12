@@ -18,6 +18,14 @@ GET http://localhost:3000/api/v1/employees/1
 
 ###
 
+GET http://localhost:3000/api/v1/artists
+
+###
+
+GET http://localhost:3000/api/v1/artists/199
+
+###
+
 POST http://localhost:3000/api/v1/employees HTTP/1.1
 content-type: application/json
 

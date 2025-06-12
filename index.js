@@ -14,6 +14,27 @@ app.get("/api/v1", (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/api/v1/artists", (req, res) => {
+  const sqlQuery = "SELECT * FROM Artist";
+
+  const artists = db.prepare(sqlQuery).all();
+
+  res.json(artists);
+});
+
+app.get("/api/v1/artists/:id", (req, res) => {
+  const id = req.params.id;
+
+  const info = db.prepare("SELECT * FROM Artist WHERE ArtistId = ?").get(id);
+
+  if (!info) {
+    res.status(404).send("Artist does not exist");
+    return;
+  }
+
+  res.json(db.prepare("SELECT * FROM Artist WHERE ArtistId = ?").get(id));
+});
+
 app.get("/api/v1/employees", (req, res) => {
   const allowedQueryParams = [
     "LastName",
