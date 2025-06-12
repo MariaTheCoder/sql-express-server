@@ -22,7 +22,7 @@ GET http://localhost:3000/api/v1/artists
 
 ###
 
-GET http://localhost:3000/api/v1/artists/199
+GET http://localhost:3000/api/v1/artists/0
 
 ###
 
