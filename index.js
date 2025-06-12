@@ -15,11 +15,42 @@ app.get("/api/v1", (req, res) => {
 });
 
 app.get("/api/v1/artists", (req, res) => {
-  const sqlQuery = "SELECT * FROM Artist";
+  const sqlQuery =
+    "SELECT Artist.ArtistId, Artist.Name, Album.AlbumId, Album.Title FROM Artist LEFT JOIN Album ON Artist.ArtistId = Album.ArtistId";
 
-  const artists = db.prepare(sqlQuery).all();
+  const rawData = db.prepare(sqlQuery).all();
 
-  res.json(artists);
+  // time to manipulate the raw data. Let's group by artist
+  const result = [];
+
+  const artistMap = {};
+
+  rawData.forEach((artist) => {
+    if (!artistMap[artist.Name]) {
+      artistMap[artist.Name] = [];
+
+      artistMap[artist.Name].push({
+        Title: artist.Title,
+      });
+    } else {
+      artistMap[artist.Name].push({
+        Title: artist.Title,
+      });
+    }
+  });
+
+  for (const artistName in artistMap) {
+    if (Object.prototype.hasOwnProperty.call(artistMap, artistName)) {
+      const albums = artistMap[artistName];
+
+      result.push({
+        Name: artistName,
+        Albums: albums,
+      });
+    }
+  }
+
+  res.json(result);
 });
 
 app.get("/api/v1/artists/:id", (req, res) => {
