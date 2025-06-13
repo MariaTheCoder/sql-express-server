@@ -18,6 +18,10 @@ GET http://localhost:3000/api/v1/employees?API_KEY=maria
 
 ###
 
+GET http://localhost:3000/api/v1/employees?Title=Sales%20Support%20Agent&API_KEY=maria
+
+###
+
 GET http://localhost:3000/api/v1/employees?API_KEY=kerim
 
 ###

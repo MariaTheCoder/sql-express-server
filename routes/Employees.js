@@ -19,6 +19,8 @@ module.exports = function (db) {
     const placeHolderValues = [];
     let employees = [];
 
+    console.log("employee", req.query);
+
     for (const qp in req.query) {
       if (allowedQueryParams.includes(qp)) {
         queryParts.push(`${qp} = ?`);
@@ -124,6 +126,8 @@ module.exports = function (db) {
   function auth(req, res, next) {
     const allowedAPI_KEYS = ["maria"];
     const key = req.query.API_KEY;
+
+    console.log("auth", req.query);
 
     if (!key) {
       res.sendStatus(403);
