@@ -9,6 +9,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
+// app.use(auth);
 
 app.get("/api/v1", (req, res) => {
   res.send("Hello World!");
@@ -66,7 +67,7 @@ app.get("/api/v1/artists/:id", (req, res) => {
   res.json(db.prepare("SELECT * FROM Artist WHERE ArtistId = ?").get(id));
 });
 
-app.get("/api/v1/employees", (req, res) => {
+app.get("/api/v1/employees", auth, (req, res) => {
   const allowedQueryParams = [
     "LastName",
     "FirstName",
@@ -181,6 +182,26 @@ app.delete("/api/v1/employees/:id", (req, res) => {
 
   res.json(employeeToBeDeleted);
 });
+
+function auth(req, res, next) {
+  const allowedAPI_KEYS = ["maria"];
+  const key = req.query.API_KEY;
+
+  if (!key) {
+    res.sendStatus(403);
+    return;
+  }
+
+  if (!allowedAPI_KEYS.includes(key)) {
+    res.sendStatus(401);
+    return;
+  }
+
+  if (allowedAPI_KEYS.includes(key)) {
+    next();
+    return;
+  }
+}
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
