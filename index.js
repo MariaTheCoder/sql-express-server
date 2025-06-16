@@ -10,10 +10,12 @@ app.use(express.json());
 // Import and initialize routers with 'db'
 const employeesRouter = require("./routes/employees");
 const artistsRouter = require("./routes/Artists");
+const usersRouter = require("./routes/Users");
 
 // User routers
 app.use("/api/v1/employees", employeesRouter);
 app.use("/api/v1/artists", artistsRouter);
+app.use("/api/v1/users", usersRouter);
 
 app.get("/api/v1", (req, res) => {
   res.send("Hello World!");

@@ -58,3 +58,20 @@ content-type: application/json
 ###
 
 DELETE http://localhost:3000/api/v1/employees/9 HTTP/1.1
+
+###
+
+
+GET http://localhost:3000/api/v1/users HTTP/1.1
+###
+
+POST http://localhost:3000/api/v1/users HTTP/1.1
+content-type: application/json
+
+{
+  "Email": "johndoe@email.com",
+  "Password": "Password",
+  "GivenName": "John Doe",
+  "Role": "User"
+}
+
