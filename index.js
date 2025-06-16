@@ -1,8 +1,5 @@
 const express = require("express");
-const Database = require("better-sqlite3");
-
-// Initialize the database
-const db = new Database("Chinook_Sqlite.sqlite");
+const db = require("./db");
 
 // Initialize Express app
 const app = express();
@@ -12,8 +9,8 @@ const port = 3000;
 app.use(express.json());
 
 // Import and initialize routers with 'db'
-const employeesRouter = require("./routes/employees")(db);
-const artistsRouter = require("./routes/Artists")(db);
+const employeesRouter = require("./routes/employees");
+const artistsRouter = require("./routes/Artists");
 
 // User routers
 app.use("/api/v1/employees", employeesRouter);
