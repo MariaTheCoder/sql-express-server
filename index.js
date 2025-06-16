@@ -1,5 +1,4 @@
 const express = require("express");
-const db = require("./db");
 
 // Initialize Express app
 const app = express();
