@@ -39,10 +39,10 @@ router.get("/login", (req, res) => {
   const password = req.body["Password"];
 
   // first we need to find out if the user exists
-  const statement = db
-    .prepare("SELECT * FROM User WHERE Email = ? AND Password = ?")
-    .bind(email, password);
-  const user = statement.get();
+  const statement = db.prepare(
+    "SELECT * FROM User WHERE Email = ? AND Password = ?"
+  );
+  const user = statement.get(email, password);
 
   // login new user. For now, alternate whether the login was successful or not
   if (!user) {
@@ -57,10 +57,8 @@ router.get("/logout", (req, res) => {
   const email = req.body["Email"];
 
   // first we need to find out if the user exists
-  const statement = db
-    .prepare("SELECT * FROM User WHERE Email = ?")
-    .bind(email);
-  const user = statement.get();
+  const statement = db.prepare("SELECT * FROM User WHERE Email = ?");
+  const user = statement.get(email);
 
   // if the user was not found, send back an http error
   if (!user) {
