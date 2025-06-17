@@ -88,6 +88,12 @@ content-type: application/json
 ###
 
 GET http://localhost:3000/api/v1/users/login HTTP/1.1
+content-type: application/json
+
+{
+  "Email": "janedoe@email.com",
+  "Password": "Password"
+}
 
 ###
 
@@ -95,7 +101,7 @@ GET http://localhost:3000/api/v1/users/logout HTTP/1.1
 content-type: application/json
 
 {
-  "Email": "janedo@email.com"
+  "Email": "janedoe@email.com"
 }
 
 

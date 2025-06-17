@@ -34,19 +34,23 @@ router.post("/register", (req, res) => {
   res.json(info);
 });
 
-let success = true;
-
 router.get("/login", (req, res) => {
+  const email = req.body["Email"];
+  const password = req.body["Password"];
+
+  // first we need to find out if the user exists
+  const statement = db
+    .prepare("SELECT * FROM User WHERE Email = ? AND Password = ?")
+    .bind(email, password);
+  const user = statement.get();
+
   // login new user. For now, alternate whether the login was successful or not
-  if (!success) {
-    success = !success;
+  if (!user) {
     res.sendStatus(401);
     return;
-  } else {
-    success = !success;
-    res.sendStatus(200);
-    return;
   }
+
+  res.status(200).json(user);
 });
 
 router.get("/logout", (req, res) => {
