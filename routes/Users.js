@@ -49,4 +49,22 @@ router.get("/login", (req, res) => {
   }
 });
 
+router.get("/logout", (req, res) => {
+  const email = req.body["Email"];
+
+  // first we need to find out if the user exists
+  const statement = db
+    .prepare("SELECT * FROM User WHERE Email = ?")
+    .bind(email);
+  const user = statement.get();
+
+  // if the user was not found, send back an http error
+  if (!user) {
+    res.sendStatus(401);
+    return;
+  }
+
+  res.status(200).json(user);
+});
+
 module.exports = router;
