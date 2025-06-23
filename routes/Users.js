@@ -34,7 +34,7 @@ router.post("/register", (req, res) => {
   res.json(info);
 });
 
-router.get("/login", (req, res) => {
+router.post("/login", (req, res) => {
   const email = req.body["Email"];
   const password = req.body["Password"];
 

@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 // Initialize Express app
 const app = express();
@@ -6,6 +7,7 @@ const port = 3000;
 
 // Use JSON middleware
 app.use(express.json());
+app.use(cors());
 
 // Import and initialize routers with 'db'
 const employeesRouter = require("./routes/employees");
