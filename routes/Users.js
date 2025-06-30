@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const db = require("../db");
 const router = express.Router();
 
@@ -50,7 +51,7 @@ router.post("/login", (req, res) => {
     return;
   }
 
-  res.status(200).json(user);
+  res.sendFile(path.join(__dirname, "../private", "dashboard.html"));
 });
 
 router.get("/logout", (req, res) => {
