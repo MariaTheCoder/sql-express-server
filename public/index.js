@@ -1,7 +1,7 @@
 const form = document.getElementById("form");
 const submitBtn = document.getElementById("submitBtn");
 
-submitBtn.addEventListener("click", (event) => {
+submitBtn.addEventListener("click", async (event) => {
   event.preventDefault();
 
   const formData = new FormData(form);
@@ -13,4 +13,22 @@ submitBtn.addEventListener("click", (event) => {
   // next, convert the JavaScript object to a JSON string
   const payload = JSON.stringify(dataObject);
   console.log(payload);
+
+  try {
+    const response = await fetch("http://127.0.0.1:3000/api/v1/users/login", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "http://127.0.0.1",
+      },
+      body: payload,
+    });
+
+    if (!response.ok) {
+      throw new Error(`${response.status}, ${response.statusText}`);
+    }
+  } catch (err) {
+    console.error("Fetch", err);
+  }
 });
