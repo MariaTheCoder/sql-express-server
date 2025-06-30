@@ -4,15 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SQL-Express frontend</title>
+    <script defer src="index.js"></script>
   </head>
   <body>
     <h1>Log in</h1>
-    <form action="">
+    <form id="form" action="" method="post">
       <label for="email">Email:</label>
       <input type="email" name="email" id="email" />
       <label for="password">Password:</label>
       <input type="password" name="password" id="password" />
-      <input type="button" value="Login" />
+      <input id="submitBtn" type="button" value="Login" />
     </form>
   </body>
 </html>
