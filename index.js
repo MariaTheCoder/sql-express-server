@@ -3,7 +3,7 @@ const cors = require("cors");
 
 // Initialize Express app
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Use JSON middleware
 app.use(express.json());
@@ -13,6 +13,9 @@ app.use(cors());
 const employeesRouter = require("./routes/employees");
 const artistsRouter = require("./routes/Artists");
 const usersRouter = require("./routes/Users");
+
+// Use express.static middleware to serve static files from the "public" folder
+app.use(express.static("public"));
 
 // User routers
 app.use("/api/v1/employees", employeesRouter);
