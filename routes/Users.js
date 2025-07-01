@@ -51,6 +51,11 @@ router.post("/login", (req, res) => {
     return;
   }
 
+  // redirect to the dashboard route
+  res.redirect("http://127.0.0.1:3000/api/v1/users/dashboard");
+});
+
+router.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "../private", "dashboard.html"));
 });
 
