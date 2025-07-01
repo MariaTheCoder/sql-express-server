@@ -4,8 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register</title>
+    <script defer src="register.js"></script>
   </head>
   <body>
     <h1>Register new user</h1>
+    <form id="form" action="" method="post">
+      <label for="email">Email:</label>
+      <input type="email" name="Email" id="email" />
+      <label for="password">Password:</label>
+      <input type="password" name="Password" id="password" />
+      <input id="submitBtn" type="button" value="Register" />
+    </form>
+    <a href="./index.html">Already a user? Log in!</a>
+    <div id="messageBox"></div>
   </body>
 </html>

@@ -27,12 +27,24 @@ router.post("/register", (req, res) => {
   const email = req.body["Email"];
   const password = req.body["Password"];
 
+  // Step 1: Check if user already exists
+  const checkUserStatement = db.prepare("SELECT * FROM User WHERE Email = ?");
+  const existingUser = checkUserStatement.get(email);
+
+  if (existingUser) {
+    // Email already exists
+    res.status(409).json({ message: "User with this email already exists." });
+    return;
+  }
+
+  // Step 2: Insert new user
   const insertStatement = db.prepare(
     "INSERT INTO User (Email, Password) VALUES (?, ?)"
   );
 
   const info = insertStatement.run(email, password);
-  res.json(info);
+  console.log(info);
+  res.status(201).json(info);
 });
 
 router.post("/login", (req, res) => {
