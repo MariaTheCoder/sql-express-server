@@ -1,9 +1,21 @@
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
 
 // Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
+app.use(
+  session({
+    secret: "your-secret-key", // replace this with a strong secret
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60, // 1 hour
+    },
+  })
+);
 
 // Use JSON middleware
 app.use(express.json());

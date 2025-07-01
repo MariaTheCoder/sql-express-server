@@ -3,6 +3,13 @@ const path = require("path");
 const db = require("../db");
 const router = express.Router();
 
+function requireAuth(req, res, next) {
+  if (!req.session.user) {
+    return res.status(401).send("Unauthorized. Please log in.");
+  }
+  next();
+}
+
 router.get("/", (req, res) => {
   const rawData = db.prepare("SELECT * FROM User").all();
 
@@ -63,11 +70,15 @@ router.post("/login", (req, res) => {
     return;
   }
 
+  // Mark the user as logged in
+  req.session.user = { email: user.Email };
+  console.log(req.session);
+
   // redirect to the dashboard route
   res.redirect("http://127.0.0.1:3000/api/v1/users/dashboard");
 });
 
-router.get("/dashboard", (req, res) => {
+router.get("/dashboard", requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "../private", "dashboard.html"));
 });
 
