@@ -13,15 +13,24 @@ function requireAuth(req, res, next) {
   if (!req.query.token) {
     return res.status(401).send("Unauthorized. Please log in.");
   }
+  const token = req.query.token;
 
   const checkSessionStatement = db.prepare(
     "SELECT * FROM Session WHERE Token = ?"
   );
-  const session = checkSessionStatement.get(req.query["token"]);
+  const session = checkSessionStatement.get(token);
 
   console.log(session);
 
-  if (!session || session.ExpiresAt < Date.now()) {
+  if (!session) {
+    console.log("Session doesn't exist");
+    return res.status(401).send("Unauthorized. Please log in.");
+  }
+
+  if (session || session.ExpiresAt < Date.now()) {
+    const deleteStatement = db.prepare("DELETE FROM Session WHERE Token = ?");
+    const info = deleteStatement.run(token);
+    console.log("Session expired. ", info);
     return res.status(401).send("Unauthorized. Please log in.");
   }
 

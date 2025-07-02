@@ -28,7 +28,9 @@ submitBtn.addEventListener("click", async (event) => {
     if (!response.ok) {
       throw new Error(`${response.status}, ${response.statusText}`);
     } else {
-      window.location.href = "http://127.0.0.1:3000/api/v1/users/dashboard";
+      const user = await response.json();
+      console.log("user:", user);
+      // window.location.href = "http://127.0.0.1:3000/api/v1/users/dashboard";
     }
   } catch (err) {
     console.error("Fetch", err);
