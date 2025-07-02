@@ -2,11 +2,29 @@ const express = require("express");
 const path = require("path");
 const db = require("../db");
 const router = express.Router();
+const { randomBytes } = require("node:crypto");
+
+function tokenGenerate(length = 4) {
+  return Buffer.from(randomBytes(length)).toString("hex");
+}
 
 function requireAuth(req, res, next) {
-  if (!req.session.user) {
+  console.log("requested");
+  if (!req.query.token) {
     return res.status(401).send("Unauthorized. Please log in.");
   }
+
+  const checkSessionStatement = db.prepare(
+    "SELECT * FROM Session WHERE Token = ?"
+  );
+  const session = checkSessionStatement.get(req.query["token"]);
+
+  console.log(session);
+
+  if (!session || session.ExpiresAt < Date.now()) {
+    return res.status(401).send("Unauthorized. Please log in.");
+  }
+
   next();
 }
 
@@ -56,26 +74,39 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
   const email = req.body["Email"];
-  const password = req.body["Password"];
 
-  // first we need to find out if the user exists
-  const statement = db.prepare(
-    "SELECT * FROM User WHERE Email = ? AND Password = ?"
-  );
-  const user = statement.get(email, password);
+  // Step 1: Test is user already exists in the database
+  const checkUserStatement = db.prepare("SELECT * FROM User WHERE Email = ?");
+  const existingUser = checkUserStatement.get(email);
 
-  // login new user. For now, alternate whether the login was successful or not
-  if (!user) {
-    res.sendStatus(401);
-    return;
+  // Step 2: If user does not already exist in the database, add user
+  if (!existingUser) {
+    const insertStatement = db.prepare("INSERT INTO User (Email) VALUES (?)");
+
+    const info = insertStatement.run(email);
+    const newUserId = info.lastInsertRowid;
+
+    const newUserStatement = db.prepare("SELECT * FROM User WHERE UserId = ?");
+    const newUser = newUserStatement.get(newUserId);
+
+    res.status(201).json(newUser);
+  } else {
+    const insertStatement = db.prepare(
+      "INSERT INTO Session (UserId, Token, ExpiresAt) VALUES (?, ?, ?)"
+    );
+    const { UserId } = existingUser;
+    const newToken = tokenGenerate();
+    const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
+
+    const info = insertStatement.run(UserId, newToken, expiresAt);
+
+    console.log(info);
+
+    res.status(200).json({
+      existingUser,
+      newToken,
+    });
   }
-
-  // Mark the user as logged in
-  req.session.user = { email: user.Email };
-  console.log(req.session);
-
-  // redirect to the dashboard route
-  res.redirect("http://127.0.0.1:3000/api/v1/users/dashboard");
 });
 
 router.get("/dashboard", requireAuth, (req, res) => {
