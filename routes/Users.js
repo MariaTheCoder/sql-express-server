@@ -3,38 +3,10 @@ const path = require("path");
 const db = require("../db");
 const router = express.Router();
 const { randomBytes } = require("node:crypto");
+const authenticateSession = require("../middlewares/authenticateSession");
 
 function tokenGenerate(length = 4) {
   return Buffer.from(randomBytes(length)).toString("hex");
-}
-
-function requireAuth(req, res, next) {
-  console.log("requested");
-  if (!req.query.token) {
-    return res.status(401).send("Unauthorized. Please log in.");
-  }
-  const token = req.query.token;
-
-  const checkSessionStatement = db.prepare(
-    "SELECT * FROM Session WHERE Token = ?"
-  );
-  const session = checkSessionStatement.get(token);
-
-  console.log(session);
-
-  if (!session) {
-    console.log("Session doesn't exist");
-    return res.status(401).send("Unauthorized. Please log in.");
-  }
-
-  if (session || session.ExpiresAt < Date.now()) {
-    const deleteStatement = db.prepare("DELETE FROM Session WHERE Token = ?");
-    const info = deleteStatement.run(token);
-    console.log("Session expired. ", info);
-    return res.status(401).send("Unauthorized. Please log in.");
-  }
-
-  next();
 }
 
 router.get("/", (req, res) => {
@@ -116,10 +88,6 @@ router.post("/login", (req, res) => {
       newToken,
     });
   }
-});
-
-router.get("/dashboard", requireAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, "../private", "dashboard.html"));
 });
 
 router.get("/logout", (req, res) => {

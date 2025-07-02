@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
+const authenticateSession = require("./middlewares/authenticateSession");
+const path = require("node:path");
 
 // Initialize Express app
 const app = express();
@@ -25,6 +27,10 @@ app.use(
 const employeesRouter = require("./routes/employees");
 const artistsRouter = require("./routes/Artists");
 const usersRouter = require("./routes/Users");
+
+app.get("/dashboard", authenticateSession, (req, res) => {
+  res.sendFile(path.join(__dirname, "private", "dashboard.html"));
+});
 
 // Use express.static middleware to serve static files from the "public" folder
 app.use(express.static("public"));
