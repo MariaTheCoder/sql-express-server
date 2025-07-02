@@ -5,6 +5,10 @@ const session = require("express-session");
 // Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Use JSON middleware
+app.use(express.json());
+app.use(cors());
 app.use(
   session({
     secret: "your-secret-key", // replace this with a strong secret
@@ -16,10 +20,6 @@ app.use(
     },
   })
 );
-
-// Use JSON middleware
-app.use(express.json());
-app.use(cors());
 
 // Import and initialize routers with 'db'
 const employeesRouter = require("./routes/employees");
