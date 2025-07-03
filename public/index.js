@@ -33,7 +33,7 @@ submitBtn.addEventListener("click", async (event) => {
     } else {
       const user = await response.json();
 
-      messageBox.textContent = `A magic link was sent to your email: ${user.existingUser.Email}!`;
+      messageBox.textContent = `A magic link was sent to your email ${user.Email}!`;
       messageBox.style.color = "green";
     }
   } catch (err) {

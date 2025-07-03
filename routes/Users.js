@@ -3,6 +3,30 @@ const path = require("path");
 const db = require("../db");
 const router = express.Router();
 const { randomBytes } = require("node:crypto");
+const nodemailer = require("nodemailer");
+
+// Create a test account or replace with real credentials
+const transporter = nodemailer.createTransport({
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: "ashton54@ethereal.email",
+    pass: "eV7p49qTFCV8NDUw6c",
+  },
+});
+
+async function sendEmail(token) {
+  const info = await transporter.sendMail({
+    from: '"Maddison Foo Koch" <maddison53@ethereal.email>',
+    to: "ashton54@ethereal.email",
+    subject: "You sign to Dashboard",
+    // text: "", // plain‑text body
+    html: `<h1>Your sign in link</h1><p>This link will only be valid for 24 hours</p><a href="http://127.0.0.1:3000/dashboard?token=${token}"  target="_blank" rel="noopener noreferrer">Log in</a>`, // HTML body
+  });
+
+  console.log("Message sent:", info.messageId);
+}
 
 function tokenGenerate(length = 4) {
   return Buffer.from(randomBytes(length)).toString("hex");
@@ -54,39 +78,39 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
   const email = req.body["Email"];
+  let user;
 
   // Step 1: Test is user already exists in the database
   const checkUserStatement = db.prepare("SELECT * FROM User WHERE Email = ?");
-  const existingUser = checkUserStatement.get(email);
+  user = checkUserStatement.get(email);
 
   // Step 2: If user does not already exist in the database, add user
-  if (!existingUser) {
+  if (!user) {
     const insertStatement = db.prepare("INSERT INTO User (Email) VALUES (?)");
 
     const info = insertStatement.run(email);
     const newUserId = info.lastInsertRowid;
 
     const newUserStatement = db.prepare("SELECT * FROM User WHERE UserId = ?");
-    const newUser = newUserStatement.get(newUserId);
-
-    res.status(201).json(newUser);
-  } else {
-    const insertStatement = db.prepare(
-      "INSERT INTO Session (UserId, Token, ExpiresAt) VALUES (?, ?, ?)"
-    );
-    const { UserId } = existingUser;
-    const newToken = tokenGenerate();
-    const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
-
-    const info = insertStatement.run(UserId, newToken, expiresAt);
-
-    console.log(info);
-
-    res.status(200).json({
-      existingUser,
-      newToken,
-    });
+    user = newUserStatement.get(newUserId);
   }
+
+  // if user exists, start a new session
+  const insertStatement = db.prepare(
+    "INSERT INTO Session (UserId, Token, ExpiresAt) VALUES (?, ?, ?)"
+  );
+  const { UserId } = user;
+  const newToken = tokenGenerate();
+  const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
+
+  insertStatement.run(UserId, newToken, expiresAt);
+
+  sendEmail(newToken);
+
+  res.status(200).json({
+    ...user,
+    newToken,
+  });
 });
 
 router.get("/logout", (req, res) => {
