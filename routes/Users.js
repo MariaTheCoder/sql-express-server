@@ -3,7 +3,6 @@ const path = require("path");
 const db = require("../db");
 const router = express.Router();
 const { randomBytes } = require("node:crypto");
-const authenticateSession = require("../middlewares/authenticateSession");
 
 function tokenGenerate(length = 4) {
   return Buffer.from(randomBytes(length)).toString("hex");

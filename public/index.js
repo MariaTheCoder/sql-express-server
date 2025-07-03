@@ -1,5 +1,6 @@
 const form = document.getElementById("form");
 const submitBtn = document.getElementById("submitBtn");
+const messageBox = document.getElementById("messageBox");
 
 submitBtn.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -26,11 +27,14 @@ submitBtn.addEventListener("click", async (event) => {
     });
 
     if (!response.ok) {
+      messageBox.textContent = `Error status ${response.status}: ${response.statusText}`;
+      messageBox.style.color = "red";
       throw new Error(`${response.status}, ${response.statusText}`);
     } else {
       const user = await response.json();
-      console.log("user:", user);
-      // window.location.href = "http://127.0.0.1:3000/api/v1/users/dashboard";
+
+      messageBox.textContent = `A magic link was sent to your email: ${user.existingUser.Email}!`;
+      messageBox.style.color = "green";
     }
   } catch (err) {
     console.error("Fetch", err);
